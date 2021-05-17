@@ -14,6 +14,7 @@ import multiprocessing
 from wsgiTest import application
 import logging
 
+
 # 1.构建socket对象
 class staticWebServer():
     def __init__(self, port):
@@ -43,13 +44,12 @@ class staticWebServer():
             request_path = request_info.split(' ')[1]
             if request_path == '/':
                 request_path = '/index.html'
-            print(f"请求地址是:request_path")
 
             # wsgi动静分离
             # 后缀为html为动态数据
             if request_path.endswith('.html'):
                 # 处理动态数据
-                logging.info(f"客户端访问动态页面，请求地址是:request_path")
+                logging.info(f"客户端访问动态页面，请求地址是:{request_path}")
                 env = {"PATH": request_path}
                 response_body = application(env, self.start_response)
                 response_line = f'HTTP/1.1 {self.__status}\r\n'
@@ -91,7 +91,7 @@ class staticWebServer():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, filename='C:\\Users\\cisdi\\Documents\\pythonWeb\\error.log', filemode='a',
+    logging.basicConfig(level=logging.DEBUG, filename='error.log', filemode='a',
                         format='%(asctime)s -- %(filename)s -- [line_num:%(lineno)d]'
                                '-- %(levelname)s: %(message)s')
     staticWebServer(port=4444).start()

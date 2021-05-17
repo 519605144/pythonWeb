@@ -7,16 +7,25 @@
 <!--    <script src="jquery-1.12.4.min.js"></script>-->
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.js"></script>
     <script>
-        $(function () {
-            $("input[name='toADD']").each(function () {
-                var currentAdd = $(this);
-                currentAdd.click(function () {
-                    code = $(this).attr("systemIdValue")
-                    $.get("/add/" + code + ".html", function (data, status) {
-                        alert("数据：" + data + "\n状态" + status)
-                    })
-                })
+        $(document).ready(function () {
+            $("[name='toAdd']").click(function () {
+                code = $(this).attr("systemidvalue")
+                alert(code)
             })
+            // each(function () {
+            //     $(this).click(function () {
+            //         console.log('fdfd')
+            //         alert('fdfd')
+            //     })
+            //     // var currentAdd = $(this);
+            //     // currentAdd.click(function () {
+            //     //     code = $(this).attr("systemidvalue")
+            //     //     alert(code)
+            //     //     $.get("/add/" + code + ".html", function (data, status) {
+            //     //         alert("数据：" + data + "\n状态" + status)
+            //     //     })
+            //     // })
+            // })
         })
     </script>
 </head>
