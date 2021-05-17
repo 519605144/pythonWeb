@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <script src="C:\Users\cisdi\Documents\pythonWeb\jquery-1.12.4.min.js"></script>-->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("input[name='toDel']").each(function () {
+                var currentAdd = $(this);
+                currentAdd.click(function () {
+                    code = $(this).attr("systemIdValue")
+                    $.get("/del/" + code + ".html", function (data, status) {
+                        alert("数据:"+data+"\n状态"+status)
+                    })
+                    window.location.reload()
+                })
+            })
+        })
+    </script>
+
+    <script>
+        $.get('center_data.html', function (data) {
+            console.log(data)
+            var $table = $('table')
+            var data_array = data
+
+            for (var i=0; i<data_array.length; i++){
+                var data_obj = data_array[i]
+                row_str = '<tr> ' +
+                    '<td>'+data_obj.code+'</td>' +
+                    '<td>'+data_obj.short+'</td>' +
+                    '<td>'+data_obj.chg+'</td>' +
+                    '<td>'+data_obj.turnover+'</td>' +
+                    '<td>'+data_obj.price+'</td>' +
+                    '<td>'+data_obj.highs+'</td>' +
+                    '<td>'+data_obj.note_info+'</td>' +
+                    '<td>del</td></tr>'
+                $table.append(row_str)
+            }
+        }, 'json').error(function () {
+            $table.append('<td>未读取到数据</td>')
+        })
+    </script>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+    <div class="navbar-header">
+        <button class="navbar-toggle" data-toggle="collpase" data-target="#mymenu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="#" class="navbar-brand">选股系统</a>
+    </div>
+    <div class="collapse navbar-collapse" id="mymenu">
+        <ul class="nav navbar-nav">
+            <li><a href="index.html">股票信息</a></li>
+            <li class="active"><a href="">个人中心</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+<div class="container">
+    <div class="container-fluid">
+        <table class="table table-hover">
+            <tr>
+                <th>股票代码</th>
+                <th>股票简称</th>
+                <th>涨幅率</th>
+                <th>换手率</th>
+                <th>最高价</th>
+                <th>备注信息</th>
+                <th>del</th>
+            </tr>
+            {%content%}
+        </table>
+    </div>
+</div>
+</body>
+</html>

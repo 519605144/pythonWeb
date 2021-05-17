@@ -12,7 +12,7 @@
 import socket
 import multiprocessing
 from wsgiTest import application
-
+import logging
 
 # 1.构建socket对象
 class staticWebServer():
@@ -28,6 +28,7 @@ class staticWebServer():
         while True:
             clients, ip_ports = self.static_server.accept()
             print(f'客户端{ip_ports[0]}使用{ip_ports[1]}端口接入...')
+            logging.info(f'客户端{ip_ports[0]}使用{ip_ports[1]}端口接入...')
             p = multiprocessing.Process(target=self.task, args=(clients,))
             p.start()
             clients.close()
@@ -42,12 +43,13 @@ class staticWebServer():
             request_path = request_info.split(' ')[1]
             if request_path == '/':
                 request_path = '/index.html'
-            print("请求地址是:", request_path)
+            print(f"请求地址是:request_path")
 
             # wsgi动静分离
             # 后缀为html为动态数据
             if request_path.endswith('.html'):
                 # 处理动态数据
+                logging.info(f"客户端访问动态页面，请求地址是:request_path")
                 env = {"PATH": request_path}
                 response_body = application(env, self.start_response)
                 response_line = f'HTTP/1.1 {self.__status}\r\n'
@@ -60,11 +62,13 @@ class staticWebServer():
 
             else:
                 # 3.读取资源内容
+                logging.info(f"客户端访问静态页面，请求地址是:request_path")
                 try:
                     with open(f"..\\{request_path}", 'rb') as f:
                         file_content = f.read()
                 # 4.拼接响应报文
                 except Exception as e:
+                    logging.warning("客户端访问静态页面不存在")
                     response_line = 'HTTP/1.1 404 NOT FOUND\r\n'
                     response_head = 'Server:PSW1.0\r\n'
                     with open('error.html', 'rb') as f:
@@ -87,4 +91,7 @@ class staticWebServer():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG, filename='C:\\Users\\cisdi\\Documents\\pythonWeb\\error.log', filemode='a',
+                        format='%(asctime)s -- %(filename)s -- [line_num:%(lineno)d]'
+                               '-- %(levelname)s: %(message)s')
     staticWebServer(port=4444).start()
